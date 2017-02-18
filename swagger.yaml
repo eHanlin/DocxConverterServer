@@ -1,0 +1,52 @@
+swagger: '2.0'
+info:
+  title: WordConverter
+  description: 將docx轉為doc或pdf
+  version: "1.0.0"
+host: 127.0.0.1
+schemes:
+  - http
+basePath: /Convert
+produces:
+  - application/json
+paths:
+  /ConvertToPdf:
+    post:
+      summary: 將docx轉為pdf並透過callback回傳下載位置
+      parameters:
+        - name: task
+          in: body
+          description: 轉檔所需的task資訊
+          required: true
+          schema:
+            $ref: '#/definitions/ConvertTask'
+      responses:
+        200:
+          description: 轉檔的taskId
+          schema:
+            type: string
+  /ConvertToDoc:
+    post:
+      summary: 將docx轉為doc並透過callback回傳下載位置
+      parameters:
+        - name: task
+          in: body
+          description: 轉檔所需的task資訊
+          required: true
+          schema:
+            $ref: '#/definitions/ConvertTask'
+      responses:
+        200:
+          description: 轉檔的taskId
+          schema:
+            type: string
+definitions:
+  ConvertTask:
+    properties:
+      docx:
+        description: docx下載的url
+        type: string
+      callback:
+        description: 轉檔完成通知的下載位置
+        type: string
+  
