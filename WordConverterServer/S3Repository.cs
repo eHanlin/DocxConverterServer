@@ -12,6 +12,7 @@ namespace WordConverterServer
     {
         private readonly AmazonS3Client _client;
 
+       
         public S3Repository()
         {
             _client = new AmazonS3Client(ConfigurationManager.AppSettings["AWS_ACCESS_KEY"],ConfigurationManager.AppSettings["AWS_SECRET_KEY"],RegionEndpoint.GetBySystemName(ConfigurationManager.AppSettings["AWS_END_POINT"]));
@@ -32,7 +33,7 @@ namespace WordConverterServer
             PutObjectResponse response = RetryHelper.Do(()=>_client.PutObject(request),TimeSpan.FromMinutes(1));
             if (response.HttpStatusCode == HttpStatusCode.OK)
             {
-                returnUrl = $"{returnUrl}{key}";
+                returnUrl = $"https://{returnUrl}{key}";
             }
             return Amazon.S3.Util.AmazonS3Util.UrlEncode(returnUrl,false);
         }

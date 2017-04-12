@@ -16,7 +16,10 @@ namespace WordConverterServer.Models
         public string TaskType { get; set; }//docOrPdf       
         public bool ConvertSuccess { get; set; } = false;
         public bool HookSuccess { get; set; } = false;
-        
+        public string ExceptionLog { get; set; }
+        public DateTime CreateOn { get; set; } = DateTime.Now;
+        public string Path { get; set; }
+
         public ConvertTask(string taskId, string docx, string callback, string type)
         {
             TaskId = taskId;

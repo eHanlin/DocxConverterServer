@@ -21,7 +21,7 @@ namespace WordConverterServer
             {
                 _collection.InsertOne(task);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                Delete(task.TaskId);
                Create(task);
@@ -45,6 +45,13 @@ namespace WordConverterServer
         {
             var filter = Builders<ConvertTask>.Filter.Eq(c => c.TaskId, task.TaskId);
             var update = Builders<ConvertTask>.Update.Set(c => c.ConvertSuccess, true);
+            _collection.UpdateOne(filter, update);
+        }
+
+        public void ConvertFailed(ConvertTask task)
+        {
+            var filter = Builders<ConvertTask>.Filter.Eq(c => c.TaskId, task.TaskId);
+            var update = Builders<ConvertTask>.Update.Set(c => c.ConvertSuccess, false);
             _collection.UpdateOne(filter, update);
         }
 

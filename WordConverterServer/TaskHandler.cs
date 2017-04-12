@@ -19,10 +19,11 @@ namespace WordConverterServer
 
         public void Convert(ConvertTask task)
         {
-            _mongoRepository.Create(task);
             string fileName = HttpUtility.UrlDecode(task.Docx.Split('/').Last());
             string localPath = $@"{_path}\{fileName}";
-            
+            task.Path = localPath;
+            _mongoRepository.Create(task);
+
             using (WebClient webClient = new WebClient())
             {
                 webClient.DownloadFile(task.Docx, localPath);
@@ -46,7 +47,7 @@ namespace WordConverterServer
             string targetPath = "";
             var wordApp = new Word.Application
             {
-                Visible = false,
+                Visible = true,
                 DisplayAlerts = Word.WdAlertLevel.wdAlertsNone
             };
             try
@@ -63,7 +64,12 @@ namespace WordConverterServer
                     docx.SaveAs(targetPath, Word.WdSaveFormat.wdFormatPDF);
                 }
             }
-            finally 
+            catch (Exception e)
+            {
+                task.ExceptionLog = e.ToString();
+                SendResponse(task);
+            }
+            finally
             {
                 wordApp.Documents.Close();
                 wordApp.Quit();

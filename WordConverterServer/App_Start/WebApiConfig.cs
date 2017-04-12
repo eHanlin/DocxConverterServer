@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using WordConverterServer.EsaynetQ;
 
 namespace WordConverterServer
@@ -14,7 +15,7 @@ namespace WordConverterServer
 
             // Web API 路由
             config.MapHttpAttributeRoutes();
-            
+            config.EnableCors(new EnableCorsAttribute("*","*","*"));
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
