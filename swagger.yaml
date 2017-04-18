@@ -6,7 +6,7 @@ info:
 host: 127.0.0.1
 schemes:
   - http
-basePath: /Convert
+basePath: api/Converter
 produces:
   - application/json
 paths:
