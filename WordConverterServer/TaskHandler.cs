@@ -24,21 +24,31 @@ namespace WordConverterServer
             task.Path = localPath;
             _mongoRepository.Create(task);
 
-            using (WebClient webClient = new WebClient())
+            try
             {
-                webClient.DownloadFile(task.Docx, localPath);
-            }
-            var targetPath = WordProcess(task, localPath, fileName);
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile(task.Docx, localPath);
+                }
+                var targetPath = WordProcess(task, localPath, fileName);
 
-            if (File.Exists(targetPath) && !string.IsNullOrEmpty(targetPath))
-            {
-                _mongoRepository.ConvertSuccese(task);
-                DeleteFile(localPath);
-                task.Result = RetryHelper.Do(()=>_s3Repository.UploadFile(targetPath,task.TaskId),TimeSpan.FromSeconds(5));
-                DeleteFile(targetPath);
-                UploadSuccess(task);
-                SendResponse(task);
+                if (File.Exists(targetPath) && !string.IsNullOrEmpty(targetPath))
+                {
+                    _mongoRepository.ConvertSuccese(task);
+                    DeleteFile(localPath);
+                    task.Result = RetryHelper.Do(() => _s3Repository.UploadFile(targetPath, task.TaskId),
+                        TimeSpan.FromSeconds(5));
+                    DeleteFile(targetPath);
+                    UploadSuccess(task);
+                    SendResponse(task);
+                }
             }
+            catch (Exception ex)
+            {
+                task.ExceptionLog = ex.Message;
+                _mongoRepository.ConvertFailed(task);
+            }
+
         }
 
         private string WordProcess(ConvertTask task,string localPath,string fileName)

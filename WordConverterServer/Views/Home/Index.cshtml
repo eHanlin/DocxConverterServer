@@ -1,0 +1,57 @@
+﻿@using MvcPaging
+@using WordConverterServer.Models
+@model IEnumerable<ConvertTaskResource>
+
+@{
+    ViewBag.Title = "Word Covert Server";
+}
+
+<h2>TaskList</h2>
+<br/>
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>TaskId</th>
+        <th>Docx</th>
+        <th>TaskType</th>
+        <th>ConvertSuccess</th>
+        <th>HookSuccess</th>
+        <th>ExceptionLog</th>
+        <th>Result</th>
+        <th>CreateOn</th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        foreach (ConvertTaskResource item in Model)
+        {
+            <tr>
+                <td>@item.TaskId</td>
+                <td>
+                    <a href="@item.Docx">Link</a>
+                </td>
+                <td>@item.TaskType</td>
+                <td>@item.ConvertSuccess</td>
+                <td>@item.HookSuccess</td>
+                <td>@item.ExceptionLog</td>
+                <td>
+                    @{
+                        if (!string.IsNullOrEmpty(item.Result))
+                        {
+                            <a href="@item.Result">Link</a>
+                        }
+                    }
+                </td>
+                <td>@item.CreateOn</td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<div class="pager">
+    @(Request["Page"] != null ? Html.Pager(10, int.Parse(Request["Page"]), int.Parse(ViewData["Count"].ToString())) : Html.Pager(10, 1, int.Parse(ViewData["Count"].ToString())))
+</div>
+

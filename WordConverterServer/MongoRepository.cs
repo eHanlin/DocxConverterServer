@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using WordConverterServer.Models;
 
@@ -66,6 +68,12 @@ namespace WordConverterServer
         {
             var filter = Builders<ConvertTask>.Filter.Eq(c=>c.TaskId, taskId);
             _collection.FindOneAndDelete(filter);
+        }
+
+        public List<ConvertTask> GetAll()
+        {
+            var result =_collection.Find(_ => true).ToList();
+            return result;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace WordConverterServer.EsaynetQ
             try
             {
                 TaskHandler taskHandler = new TaskHandler();
-                bus.Subscribe<ConvertTask>("task", c => taskHandler.Convert(c));
+                //bus.Subscribe<ConvertTask>("task", c => taskHandler.Convert(c));
             }
             catch (EasyNetQException ex)
             {
